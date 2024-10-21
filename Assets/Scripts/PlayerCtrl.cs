@@ -58,11 +58,15 @@ public class PlayerCtrl : MonoBehaviour
     }
     public void InputJump(InputAction.CallbackContext context)
     {
-
+        Debug.Log("Jump");
     }
     public void InputAction(InputAction.CallbackContext context)
     {
-
+        Debug.Log("Action");
+    }
+    public void InputPause(InputAction.CallbackContext context)
+    {
+        Debug.Log("Pause");
     }
     #endregion
 }
