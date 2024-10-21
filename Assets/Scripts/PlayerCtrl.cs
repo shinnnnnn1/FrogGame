@@ -10,8 +10,12 @@ public class PlayerCtrl : MonoBehaviour
 
     [SerializeField] Vector2 inputDirection;
 
+    [Space(10f)]
+    [SerializeField] float moveSpd = 1f;
+    [SerializeField] float jumpPow = 1f;
 
-
+    [Space(10f)]
+    [SerializeField] GameObject mainCam;
     [SerializeField] Transform camFollow;
     [SerializeField] Vector2 look;
     float xRot;
@@ -30,7 +34,26 @@ public class PlayerCtrl : MonoBehaviour
 
     void FixedUpdate()
     {
+        Move();
+
+;    }
+
+    void Move()
+    {
+        float speed = 0;
+        float targetRotation = 0;
+        Vector3 direction = new Vector3(inputDirection.x, 0, inputDirection.y);
         
+        if (inputDirection != Vector2.zero)
+        {
+            speed = moveSpd;
+            targetRotation = Quaternion.LookRotation(direction).eulerAngles.y + mainCam.transform.rotation.eulerAngles.y;
+            Quaternion rotation = Quaternion.Euler(0, targetRotation, 0);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 20 * Time.deltaTime);
+        }
+
+        Vector3 TargetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
+        rigid.velocity = TargetDirection * speed + new Vector3(0, rigid.velocity.y, 0);
     }
 
     void LateUpdate()
@@ -40,9 +63,9 @@ public class PlayerCtrl : MonoBehaviour
 
     void CameraRotation()
     {
-        xRot -= look.y;
+        xRot += look.y;
         yRot -= look.x;
-        xRot = Mathf.Clamp(xRot, 0, 70);
+        xRot = Mathf.Clamp(xRot, -90, 90);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
     }
