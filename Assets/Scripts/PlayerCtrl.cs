@@ -21,6 +21,18 @@ public class PlayerCtrl : MonoBehaviour
     float xRot;
     float yRot;
 
+    [Space(10f)] [Header("Action")]
+    [SerializeField] LayerMask actionLayer;
+    [SerializeField] Vector3 actionOffset;
+    [SerializeField] float length = 10f;
+    RaycastHit actionHit;
+
+    [Space(10f)] [Header("Ground")]
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] float radius = 1f;
+    [SerializeField] float distance = 1f;
+    RaycastHit groundHit;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -29,7 +41,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        
+        OnGround();
     }
 
     void FixedUpdate()
@@ -63,11 +75,47 @@ public class PlayerCtrl : MonoBehaviour
 
     void CameraRotation()
     {
-        xRot += look.y;
-        yRot -= look.x;
-        xRot = Mathf.Clamp(xRot, -90, 90);
+        xRot -= look.y;
+        yRot += look.x;
+        xRot = Mathf.Clamp(xRot, -10f, 90f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
+    }
+
+    void Jump()
+    {
+        if(OnGround())
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+            rigid.AddForce(Vector3.up * jumpPow);
+        }
+        else
+        {
+
+        }
+    }
+
+    bool OnGround()
+    {
+        if(Physics.SphereCast(transform.position, radius, Vector3.down, out groundHit, distance, groundLayer))
+        {
+            Debug.Log("OnGround");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void Action()
+    {
+        StartCoroutine(PlayAction());
+    }
+
+    IEnumerator PlayAction()
+    {
+        yield return null;
     }
 
     #region INPUT
@@ -81,15 +129,34 @@ public class PlayerCtrl : MonoBehaviour
     }
     public void InputJump(InputAction.CallbackContext context)
     {
-        Debug.Log("Jump");
+        if(context.performed)
+        {
+            Debug.Log("Jump");
+            Jump();
+        }
     }
     public void InputAction(InputAction.CallbackContext context)
     {
-        Debug.Log("Action");
+        if (context.performed)
+        {
+            Debug.Log("Action");
+        }
     }
     public void InputPause(InputAction.CallbackContext context)
     {
-        Debug.Log("Pause");
+        if (context.performed)
+        {
+            Debug.Log("Pause");
+        }
     }
     #endregion
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position + Vector3.down * distance, radius);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * length);
+    }
 }

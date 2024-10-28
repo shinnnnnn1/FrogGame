@@ -773,10 +773,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputDirection: {x: 0, y: 0}
   moveSpd: 5
-  jumpPow: 1
+  jumpPow: 200
   mainCam: {fileID: 330585543}
   camFollow: {fileID: 584841903}
   look: {x: 0, y: 0}
+  actionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  actionOffset: {x: 0, y: 0, z: 0}
+  length: 4.23
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  radius: 0.4
+  distance: 0.2
 --- !u!1 &1111833224
 GameObject:
   m_ObjectHideFlags: 0
