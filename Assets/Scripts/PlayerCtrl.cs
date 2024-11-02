@@ -11,6 +11,7 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] Vector2 inputDirection;
 
     [Space(10f)]
+    [SerializeField] float sensitivity = 1f;
     [SerializeField] float moveSpd = 1f;
     [SerializeField] float jumpPow = 1f;
 
@@ -61,7 +62,7 @@ public class PlayerCtrl : MonoBehaviour
             speed = moveSpd;
             targetRotation = Quaternion.LookRotation(direction).eulerAngles.y + mainCam.transform.rotation.eulerAngles.y;
             Quaternion rotation = Quaternion.Euler(0, targetRotation, 0);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 20 * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 10 * Time.deltaTime);
         }
 
         Vector3 TargetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
@@ -75,8 +76,8 @@ public class PlayerCtrl : MonoBehaviour
 
     void CameraRotation()
     {
-        xRot -= look.y;
-        yRot += look.x;
+        xRot -= look.y * sensitivity;
+        yRot += look.x * sensitivity;
         xRot = Mathf.Clamp(xRot, -10f, 90f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
