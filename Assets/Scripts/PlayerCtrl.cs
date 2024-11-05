@@ -2,83 +2,101 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using DG.Tweening;
 
 public class PlayerCtrl : MonoBehaviour
 {
     Animator anim;
     Rigidbody rigid;
 
-    [SerializeField] Vector2 inputDirection;
+    Vector2 inputDirection;
 
-    [Space(10f)]
-    [SerializeField] float sensitivity = 1f;
-    [SerializeField] float moveSpd = 1f;
-    [SerializeField] float jumpPow = 1f;
-
-    [Space(10f)]
+    [Header("Camera")]
     [SerializeField] GameObject mainCam;
     [SerializeField] Transform camFollow;
     [SerializeField] Vector2 look;
     float xRot;
     float yRot;
 
+    [Space(10f)] [Header("Movement")]
+    [SerializeField] float sensitivity = 1f;
+    [SerializeField] float moveSpd = 1f;
+    [SerializeField] float jumpPow = 1f;
+
+    [SerializeField] bool canMove = true;
+    [SerializeField] bool canLook = true;
+
     [Space(10f)] [Header("Action")]
+    [SerializeField] Transform tongue;
+    [SerializeField] Transform tongueStart;
+    [SerializeField] Transform tongueEnd;
     [SerializeField] LayerMask actionLayer;
     [SerializeField] Vector3 actionOffset;
-    [SerializeField] float length = 10f;
+    [SerializeField] Vector3 tongueOffset;
+    [SerializeField] float radius = 1f;
+    [SerializeField] float distance = 2f;
+    bool isTransforming;
+
+    [SerializeField] Vector3 qqq;
+    [SerializeField] Quaternion qua;
+
     RaycastHit actionHit;
 
     [Space(10f)] [Header("Ground")]
     [SerializeField] LayerMask groundLayer;
-    [SerializeField] float radius = 1f;
-    [SerializeField] float distance = 1f;
+    [SerializeField] float gRadius = 1f;
+    [SerializeField] float gDistance = 1f;
     RaycastHit groundHit;
 
     void Start()
     {
-        anim = GetComponent<Animator>();
+        anim = gameObject.transform.GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        OnGround();
+        anim.SetBool("Jump", !OnGround());
+        //Debug.Log(tongue.eulerAngles);
     }
 
     void FixedUpdate()
     {
         Move();
-
 ;    }
+
+    void LateUpdate()
+    {
+        CameraRotation();
+        SetTongueOffset();
+    }
 
     void Move()
     {
+        if (!CanMove()) { return; }
+
         float speed = 0;
         float targetRotation = 0;
         Vector3 direction = new Vector3(inputDirection.x, 0, inputDirection.y);
-        
         if (inputDirection != Vector2.zero)
         {
             speed = moveSpd;
             targetRotation = Quaternion.LookRotation(direction).eulerAngles.y + mainCam.transform.rotation.eulerAngles.y;
             Quaternion rotation = Quaternion.Euler(0, targetRotation, 0);
-            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 10 * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 8 * Time.deltaTime);
         }
-
         Vector3 TargetDirection = Quaternion.Euler(0, targetRotation, 0) * Vector3.forward;
         rigid.velocity = TargetDirection * speed + new Vector3(0, rigid.velocity.y, 0);
-    }
-
-    void LateUpdate()
-    {
-        CameraRotation();
+        Vector2 velocity = new Vector2(rigid.velocity.x, rigid.velocity.z).normalized;
+        anim.SetFloat("Move", velocity.magnitude);
     }
 
     void CameraRotation()
     {
+        if (!canLook) { return; }
         xRot -= look.y * sensitivity;
         yRot += look.x * sensitivity;
-        xRot = Mathf.Clamp(xRot, -10f, 90f);
+        xRot = Mathf.Clamp(xRot, -10f, 85f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
     }
@@ -89,6 +107,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(Vector3.up * jumpPow);
+            anim.SetBool("Jump", true);
         }
         else
         {
@@ -98,25 +117,83 @@ public class PlayerCtrl : MonoBehaviour
 
     bool OnGround()
     {
-        if(Physics.SphereCast(transform.position, radius, Vector3.down, out groundHit, distance, groundLayer))
+        if (Physics.SphereCast(transform.position, gRadius, Vector3.down, out groundHit, gDistance, groundLayer))
         {
-            Debug.Log("OnGround");
+            return true;
+        }
+        else { return false; }
+    }
+
+    void ActionCheck()
+    {
+        StartCoroutine(Action());
+        //tongue.DOMove(transform.forward * 2, 0.05f).SetLoops(2, LoopType.Yoyo).SetRelative(true);
+    }
+
+    IEnumerator Action()
+    {
+        canMove = false;
+        if (isTransforming)
+        {
+            isTransforming = false;
+        }
+        else
+        {
+            //isTransforming = true;
+            anim.SetTrigger("Action1");
+            yield return new WaitForSeconds(0.2f);
+
+            Vector3 pos = tongue.localPosition;
+            //tongue.DOLocalMove(pos + transform.forward * 2, 0.1f);
+
+            //anim.SetBool("Action", false);
+            yield return new WaitForSeconds(0.1f);
+            //tongue.DOLocalMove(pos, 0.1f);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+        canMove = true;
+    }
+
+    [SerializeField] Vector3 a;
+    [SerializeField] Vector3 b;
+    void SetTongueOffset()
+    {
+        tongueStart.transform.position += tongueOffset;
+
+        tongueEnd.localPosition = a;
+        tongueEnd.localEulerAngles = b;
+    }
+
+    bool CanTouch()
+    {
+        if (Physics.SphereCast(transform.position, radius, transform.forward, out actionHit, distance, actionLayer))
+        {
+            Debug.Log("Candd");
+            return true;
+        }
+        else { return false; }
+    }
+    bool CanEat()
+    {
+        if (Physics.SphereCast(transform.position, radius, Vector3.down, out actionHit, distance, actionLayer))
+        {
+            return true;
+        }
+        else { return false; }
+    }
+
+    bool CanMove()
+    {
+        if (canMove)
+        {
             return true;
         }
         else
         {
+            rigid.velocity = new Vector3(0, rigid.velocity.y, 0);
             return false;
         }
-    }
-
-    void Action()
-    {
-        StartCoroutine(PlayAction());
-    }
-
-    IEnumerator PlayAction()
-    {
-        yield return null;
     }
 
     #region INPUT
@@ -132,7 +209,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(context.performed)
         {
-            Debug.Log("Jump");
+            //Debug.Log("Jump");
             Jump();
         }
     }
@@ -140,24 +217,25 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (context.performed)
         {
-            Debug.Log("Action");
+            //Debug.Log("Action");
+            ActionCheck();
         }
     }
     public void InputPause(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            Debug.Log("Pause");
+            //Debug.Log("Pause");
         }
     }
     #endregion
 
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position + Vector3.down * distance, radius);
-
         Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * length);
+        Gizmos.DrawSphere(transform.position + Vector3.down * gDistance, gRadius);
+        Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * (distance + 0.4f));
+        Gizmos.DrawWireSphere(transform.position + transform.forward * distance + actionOffset, radius);
+        
     }
 }
