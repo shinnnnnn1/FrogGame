@@ -135,6 +135,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 517984199}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &299232286 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1062883256955610199, guid: 9ad9a0ce22756af4c91a593bf4644656,
+    type: 3}
+  m_PrefabInstance: {fileID: 517984199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +714,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 584841902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -812,7 +818,7 @@ GameObject:
   - component: {fileID: 958859227}
   - component: {fileID: 958859226}
   - component: {fileID: 958859225}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Obj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +905,7 @@ Transform:
   m_GameObject: {fileID: 958859224}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.74, z: 5.67}
+  m_LocalPosition: {x: 0.82, y: -3.74, z: 2.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1246,24 +1252,19 @@ MonoBehaviour:
   canMove: 1
   canLook: 1
   tongue: {fileID: 94430483}
-  tongueStart: {fileID: 1951208087}
+  tongueStart: {fileID: 299232286}
   tongueEnd: {fileID: 276834495}
   actionLayer:
     serializedVersion: 2
     m_Bits: 128
-  actionOffset: {x: 0, y: 0, z: 0}
-  tongueOffset: {x: 0, y: 0.03, z: 0}
+  actionOffset: {x: 0, y: 0.15, z: 0.4}
   radius: 0.4
   distance: 2
-  qqq: {x: 0, y: 0, z: 0}
-  qua: {x: 0, y: 0, z: 0, w: 1}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
   gRadius: 0.4
   gDistance: 0.2
-  a: {x: 0, y: 0, z: 0}
-  b: {x: -32.7, y: 0, z: 0}
 --- !u!1 &1111833224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1695,7 +1696,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1657736089}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a1a643ee384e32b4ea2553ce103acf6f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1841,12 +1842,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!4 &1951208087 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -5713597356913014782, guid: 9ad9a0ce22756af4c91a593bf4644656,
-    type: 3}
-  m_PrefabInstance: {fileID: 517984199}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2108535299
 GameObject:
   m_ObjectHideFlags: 0

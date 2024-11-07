@@ -32,13 +32,9 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] Transform tongueEnd;
     [SerializeField] LayerMask actionLayer;
     [SerializeField] Vector3 actionOffset;
-    [SerializeField] Vector3 tongueOffset;
     [SerializeField] float radius = 1f;
     [SerializeField] float distance = 2f;
     bool isTransforming;
-
-    [SerializeField] Vector3 qqq;
-    [SerializeField] Quaternion qua;
 
     RaycastHit actionHit;
 
@@ -57,7 +53,6 @@ public class PlayerCtrl : MonoBehaviour
     void Update()
     {
         anim.SetBool("Jump", !OnGround());
-        //Debug.Log(tongue.eulerAngles);
     }
 
     void FixedUpdate()
@@ -68,7 +63,6 @@ public class PlayerCtrl : MonoBehaviour
     void LateUpdate()
     {
         CameraRotation();
-        SetTongueOffset();
     }
 
     void Move()
@@ -117,7 +111,7 @@ public class PlayerCtrl : MonoBehaviour
 
     bool OnGround()
     {
-        if (Physics.SphereCast(transform.position, gRadius, Vector3.down, out groundHit, gDistance, groundLayer))
+        if (Physics.SphereCast(transform.position + transform.forward * -0.1f, gRadius, Vector3.down, out groundHit, gDistance, groundLayer))
         {
             return true;
         }
@@ -141,28 +135,18 @@ public class PlayerCtrl : MonoBehaviour
         {
             //isTransforming = true;
             anim.SetTrigger("Action1");
+
             yield return new WaitForSeconds(0.2f);
+            tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
+            tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
 
-            Vector3 pos = tongue.localPosition;
-            //tongue.DOLocalMove(pos + transform.forward * 2, 0.1f);
-
-            //anim.SetBool("Action", false);
             yield return new WaitForSeconds(0.1f);
-            //tongue.DOLocalMove(pos, 0.1f);
+            tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+            tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
 
             yield return new WaitForSeconds(0.1f);
         }
         canMove = true;
-    }
-
-    [SerializeField] Vector3 a;
-    [SerializeField] Vector3 b;
-    void SetTongueOffset()
-    {
-        tongueStart.transform.position += tongueOffset;
-
-        tongueEnd.localPosition = a;
-        tongueEnd.localEulerAngles = b;
     }
 
     bool CanTouch()
@@ -174,7 +158,7 @@ public class PlayerCtrl : MonoBehaviour
         }
         else { return false; }
     }
-    bool CanEat()
+    bool CanInteract()
     {
         if (Physics.SphereCast(transform.position, radius, Vector3.down, out actionHit, distance, actionLayer))
         {
@@ -233,9 +217,17 @@ public class PlayerCtrl : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(transform.position + Vector3.down * gDistance, gRadius);
         Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * (distance + 0.4f));
         Gizmos.DrawWireSphere(transform.position + transform.forward * distance + actionOffset, radius);
-        
+        Gizmos.DrawWireSphere(transform.position + transform.forward * -0.1f, 0.5f);
+        if(OnGround())
+        {
+            Gizmos.color = Color.cyan;
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+        }
+        Gizmos.DrawSphere(transform.position + Vector3.down * gDistance + transform.forward * -0.1f, gRadius);
     }
 }
