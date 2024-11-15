@@ -7,15 +7,15 @@ using DG.Tweening;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    [SerializeField] public Animator anim;
+    [HideInInspector] public Animator anim;
     Rigidbody rigid;
-    Eatable interactingObject;
+    [SerializeField] Eatable interactingObject;
 
     Vector2 inputDirection;
 
-    [Header("Camera")]
-    CinemachineComponentBase componentBase;
+    [Space(10f)] [Header("Camera")]
     [SerializeField] CinemachineVirtualCamera virtualCam;
+    CinemachineComponentBase componentBase;
     [SerializeField] GameObject mainCam;
     [SerializeField] Transform camFollow;
     [SerializeField] Vector2 look;
@@ -36,16 +36,15 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] Transform tongueStart;
     [SerializeField] Transform tongueMiddle;
     [SerializeField] Transform lookObj;
-    public Transform mouse;
+    public Transform mouth;
     [SerializeField] LayerMask actionLayer;
-    [SerializeField] Vector3 actionOffset;
     [SerializeField] float radius = 1f;
     [SerializeField] float distance = 2f;
     float rotY;
     float eatTime;
     bool lockOn;
 
-    [SerializeField] public bool isTransforming;
+    [HideInInspector] public bool isTransforming;
 
     RaycastHit actionHit;
 
@@ -170,7 +169,7 @@ public class PlayerCtrl : MonoBehaviour
             {
                 tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
                 tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
-                yield return new WaitForSeconds(0.4f);
+                yield return new WaitForSeconds(0.3f);
             }
             else
             {
@@ -274,13 +273,7 @@ public class PlayerCtrl : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        //Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * (distance + 0.4f));
-        //Gizmos.DrawWireSphere(transform.position + transform.forward * distance + actionOffset, radius);
         Gizmos.DrawWireSphere(transform.position, 0.5f);
-        if(actionHit.rigidbody!= null)
-        {
-            Gizmos.DrawWireSphere(actionHit.collider.gameObject.transform.position, 0.1f);
-        }
         if (OnGround())
         {
             Gizmos.color = Color.cyan;
@@ -289,6 +282,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             Gizmos.color = Color.red;
         }
-        //Gizmos.DrawSphere(transform.position + Vector3.down * gDistance + transform.forward * -0.1f, gRadius);
+        Gizmos.DrawSphere(transform.position + Vector3.down * gDistance + transform.forward * -0.1f, gRadius);
     }
 }
