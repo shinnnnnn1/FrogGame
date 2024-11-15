@@ -2,19 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 using DG.Tweening;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    Animator anim;
+    [SerializeField] public Animator anim;
     Rigidbody rigid;
+    Eatable interactingObject;
 
     Vector2 inputDirection;
 
     [Header("Camera")]
+    CinemachineComponentBase componentBase;
+    [SerializeField] CinemachineVirtualCamera virtualCam;
     [SerializeField] GameObject mainCam;
     [SerializeField] Transform camFollow;
     [SerializeField] Vector2 look;
+    [SerializeField] Vector2 scroll;
     float xRot;
     float yRot;
 
@@ -30,14 +35,17 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] Transform tongue;
     [SerializeField] Transform tongueStart;
     [SerializeField] Transform tongueMiddle;
+    [SerializeField] Transform lookObj;
+    public Transform mouse;
     [SerializeField] LayerMask actionLayer;
     [SerializeField] Vector3 actionOffset;
     [SerializeField] float radius = 1f;
     [SerializeField] float distance = 2f;
-    bool search;
-    bool isLockOn;
-    bool isTransforming;
-    [SerializeField] Vector3 tongueRotate;
+    float rotY;
+    float eatTime;
+    bool lockOn;
+
+    [SerializeField] public bool isTransforming;
 
     RaycastHit actionHit;
 
@@ -51,12 +59,13 @@ public class PlayerCtrl : MonoBehaviour
     {
         anim = gameObject.transform.GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
+        componentBase = virtualCam.GetCinemachineComponent(CinemachineCore.Stage.Body);
+        //Time.timeScale = 0.5f;
     }
 
     void Update()
     {
         anim.SetBool("Jump", !OnGround());
-        CanTouch();
     }
 
     void FixedUpdate()
@@ -68,7 +77,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         CameraRotation();
         //tongueMiddle.localEulerAngles = qqq;
-        if(search)
+        if (lockOn)
         {
             SetTongue();
         }
@@ -129,74 +138,80 @@ public class PlayerCtrl : MonoBehaviour
 
     void ActionCheck()
     {
+        if (!CanMove()) { return; }
         StartCoroutine(Action());
-
     }
 
     IEnumerator Action()
     {
         canMove = false;
+        anim.SetFloat("Move", 0);
         if (isTransforming)
         {
             isTransforming = false;
+            anim.SetBool("Action", false);
+            anim.SetTrigger("Action2");
+
+            interactingObject.Fire(this);
+
+            yield return new WaitForSeconds(0.4f);
         }
         else
         {
             anim.SetTrigger("Action1");
 
             yield return new WaitForSeconds(0.15f);
-            search = true;
+            Search();
             tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
             tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
 
             yield return new WaitForSeconds(0.15f);
-            tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
-            tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+            if(isTransforming)
+            {
+                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                yield return new WaitForSeconds(0.4f);
+            }
+            else
+            {
 
-            search = false;
-            isLockOn = false;
-            tongueRotate = new Vector3(32.198f, 0, 0);
+                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                yield return new WaitForSeconds(0.05f);
+            }
+            lockOn = false;
 
-            yield return new WaitForSeconds(0.1f);
         }
         canMove = true;
     }
 
-    
-    void SetTongue()
-    {
-        if (Physics.SphereCast(transform.position, radius, transform.forward, out actionHit, distance, actionLayer) && !isLockOn)
-        {
-            Debug.Log("asdsad");
-            //need to create tongueRotate vector :)
-            isLockOn = true;
-        }
-        else if(isLockOn)
-        {
-            tongueMiddle.localEulerAngles = tongueRotate;
-        }
-        else
-        {
-            tongueMiddle.localEulerAngles = new Vector3(32.198f, 0, 0);
-        }
-    }
-
-    bool CanTouch()
+    void Search()
     {
         if (Physics.SphereCast(transform.position, radius, transform.forward, out actionHit, distance, actionLayer))
         {
-            //Debug.Log("Candd");
-            return true;
+            lockOn = true;
+            lookObj.LookAt(actionHit.transform.position);
+            rotY = lookObj.localEulerAngles.y;
+            eatTime = actionHit.distance / distance * 0.14f;
+            Invoke("Interacting", eatTime);
+            actionHit.collider.gameObject.GetComponent<IInteractable>()?.Interact(this);
         }
-        else { return false; }
-    }
-    bool CanInteract()
-    {
-        if (Physics.SphereCast(transform.position, radius, Vector3.down, out actionHit, distance, actionLayer))
+        else
         {
-            return true;
+            anim.SetBool("Action", false);
         }
-        else { return false; }
+    }
+
+    void SetTongue()
+    {
+        tongueMiddle.localEulerAngles = new Vector3(tongueMiddle.localEulerAngles.x, rotY, 0);
+    }
+
+    void Interacting()
+    {
+        tongue.DOKill();
+        tongueStart.DOKill();
+        interactingObject = actionHit.collider.gameObject.GetComponent<Eatable>();
     }
 
     bool CanMove()
@@ -244,15 +259,29 @@ public class PlayerCtrl : MonoBehaviour
             //Debug.Log("Pause");
         }
     }
+    public void InputScroll(InputAction.CallbackContext context)
+    {
+        scroll = context.ReadValue<Vector2>() / 1200;
+        if (componentBase is Cinemachine3rdPersonFollow)
+        {
+            (componentBase as Cinemachine3rdPersonFollow).CameraDistance -= scroll.y;
+            (componentBase as Cinemachine3rdPersonFollow).CameraDistance = Mathf.Clamp
+                ((componentBase as Cinemachine3rdPersonFollow).CameraDistance, 3f, 10f);
+        }
+    }
     #endregion
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * (distance + 0.4f));
-        Gizmos.DrawWireSphere(transform.position + transform.forward * distance + actionOffset, radius);
-        Gizmos.DrawWireSphere(transform.position + transform.forward * -0.1f, 0.5f);
-        if(OnGround())
+        //Gizmos.DrawLine(transform.position + actionOffset, transform.position + actionOffset + transform.forward * (distance + 0.4f));
+        //Gizmos.DrawWireSphere(transform.position + transform.forward * distance + actionOffset, radius);
+        Gizmos.DrawWireSphere(transform.position, 0.5f);
+        if(actionHit.rigidbody!= null)
+        {
+            Gizmos.DrawWireSphere(actionHit.collider.gameObject.transform.position, 0.1f);
+        }
+        if (OnGround())
         {
             Gizmos.color = Color.cyan;
         }

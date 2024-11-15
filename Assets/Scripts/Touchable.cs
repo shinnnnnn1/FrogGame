@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Touchable : MonoBehaviour, IInteractable
 {
-    public void Interact()
+    public void Interact(PlayerCtrl player)
     {
-
+        Debug.Log("Touch");
     }
 }
