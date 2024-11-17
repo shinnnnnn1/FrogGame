@@ -116,8 +116,9 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(OnGround())
         {
+            float jump = isTransforming ? jumpPow * 0.7f : jumpPow;
             rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
-            rigid.AddForce(Vector3.up * jumpPow);
+            rigid.AddForce(Vector3.up * jump);
             anim.SetBool("Jump", true);
         }
         else

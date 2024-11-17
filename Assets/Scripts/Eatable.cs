@@ -33,7 +33,7 @@ public class Eatable : MonoBehaviour, IInteractable
             center, player.mouth.position
         },
         0.3f, PathType.CatmullRom).SetEase(Ease.OutQuart);
-        transform.DOScale(0.7f, 0.3f).SetEase(Ease.OutQuart);
+        transform.DOScale(0.6f, 0.3f).SetEase(Ease.OutQuart);
 
         yield return new WaitForSeconds(0.31f);
         transform.SetParent(player.mouth);
