@@ -9,7 +9,7 @@ public class PlayerCtrl : MonoBehaviour
 {
     [HideInInspector] public Animator anim;
     Rigidbody rigid;
-    [SerializeField] Eatable interactingObject;
+    Eatable interactingObject;
 
     Vector2 inputDirection;
 
@@ -28,7 +28,7 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float moveSpd = 1f;
     [SerializeField] float jumpPow = 1f;
 
-    [SerializeField] bool canMove = true;
+    public bool canMove = true;
     [SerializeField] bool canLook = true;
 
     [Space(10f)] [Header("Action")]
@@ -54,11 +54,14 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float gDistance = 1f;
     RaycastHit groundHit;
 
-    void Start()
+    void Awake()
     {
         anim = gameObject.transform.GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
-        componentBase = virtualCam.GetCinemachineComponent(CinemachineCore.Stage.Body);
+        if (virtualCam != null)
+        {
+            componentBase = virtualCam.GetCinemachineComponent(CinemachineCore.Stage.Body);
+        }
         //Time.timeScale = 0.5f;
     }
 
@@ -121,10 +124,6 @@ public class PlayerCtrl : MonoBehaviour
             rigid.AddForce(Vector3.up * jump);
             anim.SetBool("Jump", true);
         }
-        else
-        {
-
-        }
     }
 
     bool OnGround()
@@ -142,7 +141,7 @@ public class PlayerCtrl : MonoBehaviour
         StartCoroutine(Action());
     }
 
-    IEnumerator Action()
+    public IEnumerator Action()
     {
         canMove = false;
         anim.SetFloat("Move", 0);
@@ -174,7 +173,7 @@ public class PlayerCtrl : MonoBehaviour
             }
             else
             {
-
+                
                 tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
                 tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
                 yield return new WaitForSeconds(0.05f);
