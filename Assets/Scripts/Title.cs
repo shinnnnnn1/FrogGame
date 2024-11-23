@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class Title : MonoBehaviour
@@ -19,9 +20,22 @@ public class Title : MonoBehaviour
     void Start()
     {
         StartCoroutine(MovingFrog());
-
         fadeImage.DOFade(0f, 5f).SetEase(Ease.InCubic).SetDelay(1f);
+    }
 
+    public void GameStart()
+    {
+        fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).OnKill(()=> SceneManager.LoadScene("Stage_01"));
+    }
+
+    public void Option()
+    {
+
+    }
+
+    public void GameExit()
+    {
+        fadeImage.DOFade(1f, 10f).SetEase(Ease.OutCubic).OnComplete(()=> Application.Quit());
     }
 
     IEnumerator MovingFrog()
