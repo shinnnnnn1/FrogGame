@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class TriggerButton : MonoBehaviour, IInteractable
 {
-    [Space(10f)] [SerializeField] bool isFloor = true;
+    //[Space(10f)] [SerializeField] bool isFloor = true;
 
     [Space(10f)]
     [SerializeField] UnityEvent[] on;

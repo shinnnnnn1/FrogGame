@@ -9,6 +9,7 @@ public class Title : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] Image fadeImage;
+    [SerializeField] Image mainImage;
     [SerializeField] Image optionImage;
 
     [Header("Frog Animation")]
@@ -26,12 +27,13 @@ public class Title : MonoBehaviour
 
     public void GameStart()
     {
-        fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).OnKill(()=> SceneManager.LoadScene("Stage_01"));
+        string start = "StageA1";
+        fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).OnKill(()=> SceneManager.LoadScene(start));
     }
 
     public void Option()
     {
-        Debug.Log("asdds");
+        mainImage.gameObject.SetActive(!mainImage.gameObject.activeSelf);
         optionImage.gameObject.SetActive(!optionImage.gameObject.activeSelf);
     }
 
