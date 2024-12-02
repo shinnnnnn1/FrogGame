@@ -9,6 +9,7 @@ public class Title : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] Image fadeImage;
+    [SerializeField] Image optionImage;
 
     [Header("Frog Animation")]
     [SerializeField] PlayerCtrl frog;
@@ -30,12 +31,21 @@ public class Title : MonoBehaviour
 
     public void Option()
     {
-
+        Debug.Log("asdds");
+        optionImage.gameObject.SetActive(!optionImage.gameObject.activeSelf);
     }
 
     public void GameExit()
     {
-        fadeImage.DOFade(1f, 10f).SetEase(Ease.OutCubic).OnComplete(()=> Application.Quit());
+        fadeImage.DOFade(1f, 3f).SetEase(Ease.OutCubic).OnComplete(ApplicationQuit);
+    }
+
+    void ApplicationQuit()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif 
+        Application.Quit();
     }
 
     IEnumerator MovingFrog()

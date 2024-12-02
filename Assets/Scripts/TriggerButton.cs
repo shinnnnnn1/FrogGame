@@ -21,41 +21,43 @@ public class TriggerButton : MonoBehaviour, IInteractable
 
     void Start()
     {
-        origin = button.position;
+        origin = button.localPosition;
     }
 
     public void Interact(PlayerCtrl player)
     {
-
+        button.DOKill();
+        button.DOPunchScale(Vector3.one, 0.3f, 10, 5f);
+        Trigger(true);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        float time = (button.transform.localPosition.y + 0.097f) * 5;
+        float time = (button.transform.localPosition.y - 0.0299f) * 5;
 
         button.DOPause();
-        button.DOLocalMove(Vector3.down * 0.097f, time)
-            .SetEase(Ease.Linear).OnUpdate(IsArrival);
+        button.DOLocalMoveY(0.03f, time).SetEase(Ease.Linear).OnUpdate(IsArrival);
     }
 
     void OnTriggerExit(Collider other)
     {
-        if(isActivated)
+        isActivated = false;
+        if (isActivated)
         {
             Trigger(false);
         }
 
-        float time = (button.transform.localPosition.y + 0.097f) * 5;
+        float time = Mathf.Abs(button.transform.localPosition.y - origin.y) * 5;
 
         button.DOPause();
-        button.DOLocalMove(Vector3.down * 0.097f, time)
-            .SetEase(Ease.Linear);
+        button.DOLocalMove(origin, time).SetEase(Ease.Linear);
     }
 
     void IsArrival()
     {
-        if(button.localPosition.y <= -1 && !isActivated)
+        if(button.localPosition.y <= 0.0301f && !isActivated)
         {
+            Debug.Log("Arrrrrrrrrrrr");
             isActivated = true;
             button.DOPause();
             Trigger(true);
@@ -75,7 +77,7 @@ public class TriggerButton : MonoBehaviour, IInteractable
         {
             for (int i = 0; i < off.Length; i++)
             {
-                on[i].Invoke();
+                off[i].Invoke();
             }
         }
     }

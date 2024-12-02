@@ -40,6 +40,7 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] LayerMask actionLayer;
     [SerializeField] float radius = 1f;
     [SerializeField] float distance = 2f;
+    float rotX;
     float rotY;
     float eatTime;
     bool lockOn;
@@ -62,7 +63,6 @@ public class PlayerCtrl : MonoBehaviour
         {
             componentBase = virtualCam.GetCinemachineComponent(CinemachineCore.Stage.Body);
         }
-        //Time.timeScale = 0.5f;
     }
 
     void Update()
@@ -110,7 +110,7 @@ public class PlayerCtrl : MonoBehaviour
         if (!canLook) { return; }
         xRot -= look.y * sensitivity;
         yRot += look.x * sensitivity;
-        xRot = Mathf.Clamp(xRot, -10f, 85f);
+        xRot = Mathf.Clamp(xRot, -10f, 65f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
     }
@@ -190,6 +190,7 @@ public class PlayerCtrl : MonoBehaviour
         {
             lockOn = true;
             lookObj.LookAt(actionHit.transform.position);
+            rotX = lookObj.localEulerAngles.x;
             rotY = lookObj.localEulerAngles.y;
             eatTime = actionHit.distance / distance * 0.14f;
             Invoke("Interacting", eatTime);
@@ -203,7 +204,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void SetTongue()
     {
-        tongueMiddle.localEulerAngles = new Vector3(tongueMiddle.localEulerAngles.x, rotY, 0);
+        tongueMiddle.localEulerAngles = new Vector3(tongueMiddle.localEulerAngles.x - rotX, rotY, 0);
     }
 
     void Interacting()
