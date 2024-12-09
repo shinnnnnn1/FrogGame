@@ -5,4 +5,5 @@ public class Dialogue : ScriptableObject
 {
     public string[] dialogue;
     public AudioClip[] narration;
+    public bool[] events;
 }

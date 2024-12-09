@@ -13,13 +13,9 @@ public class TriggerEvent : MonoBehaviour
 
     void Start()
     {
-        if (dialogue != null)
+        if (!TryGetComponent<Collider>(out Collider collider) && onStart)
         {
-
-        }
-        if (!TryGetComponent<Collider>(out Collider collider))
-        {
-            //GameManager.Instance.StartDialogue();
+            GameManager.Instance.StartDialogue(dialogue);
         }
     }
 
@@ -33,7 +29,7 @@ public class TriggerEvent : MonoBehaviour
         Trigger(false);
     }
 
-    void Trigger(bool activate)
+    public void Trigger(bool activate)
     {
         if (activate)
         {
