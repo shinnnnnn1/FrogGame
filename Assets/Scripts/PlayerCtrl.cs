@@ -29,7 +29,7 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float jumpPow = 1f;
 
     public bool canMove = true;
-    [SerializeField] bool canLook = true;
+    public bool canLook = true;
 
     [Space(10f)] [Header("Action")]
     [SerializeField] Transform tongue;
@@ -256,7 +256,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (context.performed)
         {
-            //Debug.Log("Pause");
+            GameManager.Instance.Option();
         }
     }
     public void InputScroll(InputAction.CallbackContext context)

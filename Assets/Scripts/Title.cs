@@ -11,6 +11,7 @@ public class Title : MonoBehaviour
     [SerializeField] Image fadeImage;
     [SerializeField] Image mainImage;
     [SerializeField] Image optionImage;
+    [SerializeField] Slider[] options;
 
     [Header("Frog Animation")]
     [SerializeField] PlayerCtrl frog;
@@ -100,5 +101,26 @@ public class Title : MonoBehaviour
         obj[i].velocity = Vector3.zero;
 
         objInstance = false;
+    }
+
+    public void ChangeValue(Slider slider)
+    {
+
+        switch (slider.gameObject.name)
+        {
+            case "Master":
+
+                break;
+            case "BGM":
+
+                break;
+            case "SE":
+
+                break;
+            case "Voice":
+
+                break;
+
+        }
     }
 }

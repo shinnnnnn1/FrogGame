@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: A1_1
   m_EditorClassIdentifier: 
   dialogue:
-  - 
-  - 
-  - 
+  - ssssssssssssssssss
+  - "aaaaaaaaaaa\u305D\u308C\u306F"
+  - "\u305D\u308C\u306F\u307E\u308B\u3067"
   narration:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 2ca9dfc5c87541540b731dc34bfc7bda, type: 3}
+  - {fileID: 8300000, guid: 26364aaf1f64b40c1a047b0bacfbd10e, type: 3}
+  - {fileID: 8300000, guid: d65707d0dde556441b074e7e98afff15, type: 3}
