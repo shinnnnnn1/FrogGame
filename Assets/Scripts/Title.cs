@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEngine.Audio;
 
 public class Title : MonoBehaviour
 {
+    [SerializeField] AudioMixer audioMixer;
+
     [Header("UI")]
     [SerializeField] Image fadeImage;
     [SerializeField] Image mainImage;
@@ -103,24 +106,9 @@ public class Title : MonoBehaviour
         objInstance = false;
     }
 
-    public void ChangeValue(Slider slider)
+    void ChangeAudioValue(Slider slider)
     {
-
-        switch (slider.gameObject.name)
-        {
-            case "Master":
-
-                break;
-            case "BGM":
-
-                break;
-            case "SE":
-
-                break;
-            case "Voice":
-
-                break;
-
-        }
+        float value = slider.value * 10 - 80;
+        audioMixer.SetFloat(slider.name, value);
     }
 }

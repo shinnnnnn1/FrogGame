@@ -1,10 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if(instance == null)
+            if (instance == null)
             {
                 return null;
             }
@@ -33,38 +35,58 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool isPlaying= true;
-    public PlayerCtrl player;
+    bool isPlaying = true;
+    PlayerCtrl player;
 
     [Header("UI")]
-    public Image fadeImage;
-    public Image optionUI;
-    public Slider[] options;
-    public Image dialogueImage;
-    public TMP_Text dialogueText;
+    [SerializeField] Image fadeImage;
+    [SerializeField] Image optionUI;
+    [SerializeField] Slider[] options;
+    [SerializeField] Image dialogueImage;
+    [SerializeField] TMP_Text dialogueText;
 
-    public AudioSource[] sources;
+    [Header("Audio")]
+    [SerializeField] AudioMixer audioMixer;
+    [SerializeField] AudioSource[] sources;
 
     void Start()
     {
-        Cursor.visible = !isPlaying;
+        Setup();
+        Fade(true);
+    }
+    void Setup()
+    {
+        Cursor.visible = false;
         Cursor.lockState = isPlaying ? CursorLockMode.Locked : CursorLockMode.None;
 
+        player = FindObjectOfType<PlayerCtrl>();
         sources = FindObjectsOfType<AudioSource>();
 
-        fadeImage.DOFade(0f, 5f).SetEase(Ease.InCubic).SetDelay(1f);
+
+        PlayerPrefs.SetString("Scene", SceneManager.GetActiveScene().name);
+    }
+    public void Fade(bool fadeIn)
+    {
+        if(fadeIn)
+        {
+            fadeImage.DOFade(0f, 5f).SetEase(Ease.InCubic).SetDelay(1f);
+        }
+        else
+        {
+            fadeImage.DOFade(1f, 10f).SetEase(Ease.OutCubic).SetDelay(2f);
+        }
     }
 
+    #region Dialogue and Event
     public void StartDialogue(Dialogue dialogue)
     {
         dialogueImage.DOFade(0.1f, 0.2f).SetDelay(2.0f);
         StartCoroutine(DialogueEvent(dialogue));
     }
-
     IEnumerator DialogueEvent(Dialogue dialogue)
     {
         yield return new WaitForSeconds(2.3f);
-        for (int i  = 0; i < dialogue.dialogue.Length; i ++)
+        for (int i = 0; i < dialogue.dialogue.Length; i++)
         {
             DialogueEvent(dialogue, i);
             StartCoroutine(TextAnim(dialogue, i));
@@ -75,28 +97,25 @@ public class GameManager : MonoBehaviour
         dialogueText.text = "";
         dialogueImage.DOFade(0, 0.2f);
     }
-
     IEnumerator TextAnim(Dialogue dialogue, int index)
     {
         dialogueText.text = dialogue.dialogue[index];
-        for(int i = 0; i < dialogue.dialogue[index].Length; i ++)
+        for (int i = 0; i < dialogue.dialogue[index].Length; i++)
         {
             dialogueText.maxVisibleCharacters = i;
             yield return new WaitForSeconds(0.1f);
         }
         dialogueText.maxVisibleCharacters = dialogue.dialogue[index].Length;
     }
-
     void DialogueEvent(Dialogue dialogue, int index)
     {
-        switch(dialogue.name)
+        switch (dialogue.name)
         {
             case "A1_1":
 
                 break;
         }
     }
-
     public void CustomEvent(int i)
     {
         switch (i)
@@ -105,7 +124,9 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Options
     public void Option()
     {
         isPlaying = !isPlaying;
@@ -115,32 +136,50 @@ public class GameManager : MonoBehaviour
         Time.timeScale = isPlaying ? 1 : 0;
         Cursor.visible = !isPlaying;
         Cursor.lockState = isPlaying ? CursorLockMode.Locked : CursorLockMode.None;
-
     }
-
-    public void ChangeValue(Slider slider)
+    public void ChangeAudioValue(Slider slider)
+    {
+        float value = slider.value * 10 -80;
+        audioMixer.SetFloat(slider.name, value);
+    }
+    public void ChangeSensitivity()
     {
 
-        switch (slider.gameObject.name)
+    }
+    public void Title()
+    {
+
+    }
+    #endregion
+
+    public void ChangeScene()
+    {
+        string[] a = { "A", "B", "C", "D", "E", "F", };
+
+        string level = PlayerPrefs.GetString("Scene").Substring(5, 1);
+        string stage = (int.Parse(PlayerPrefs.GetString("Scene").Substring(6, 1)) + 1).ToString();
+
+        if ((level == "A" && stage == "4") || (level != "A" && stage == "2"))
         {
-            case "Master":
-                
-                break;
-            case "BGM":
-
-                break;
-            case "SE":
-                
-                break;
-            case "Voice":
-
-                break;
-            case "Horizontal":
-                
-                break;
-            case "Vertical":
-                break;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (level == a[i])
+                {
+                    level = a[i + 1];
+                    stage = "1";
+                    break;
+                }
+            }
         }
+
+        string nextScene = "Stage" + level + stage;
+        SceneManager.LoadScene(nextScene);
+
+        //Debug.Log("Next Scene = " + nextScene);
+    }
+
+    public void PlaySE(AudioClip clip)
+    {
 
     }
 }
