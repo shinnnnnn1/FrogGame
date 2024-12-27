@@ -16,7 +16,7 @@ public class MoveStage : MonoBehaviour
     {
         if(isStart)
         {
-            transform.DOMoveY(-10, 10).SetRelative(true).SetEase(Ease.Linear);
+            transform.DOMoveY(-3, 3).SetRelative(true).SetEase(Ease.Linear);
             GameManager.Instance.Fade(true);
         }
     }
@@ -31,7 +31,7 @@ public class MoveStage : MonoBehaviour
 
         transform.DOMoveY(-20, 20).SetRelative(true).SetEase(Ease.Linear).SetDelay(2f);
         GameManager.Instance.Fade(false);
-        Invoke("NextScene", 12f);
+        Invoke("NextScene", 7.5f);
     }
 
     void NextScene()

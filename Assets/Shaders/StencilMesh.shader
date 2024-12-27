@@ -6,7 +6,7 @@ Shader "Custom/StencilMesh"
     }
     SubShader
     {
-        Tags{"RenderType"="Opaque" "Queue"="Getmetry-1" "RenderPipeline"="UniversalPipeline"}
+        Tags{"RenderType"="Opaque" "Queue"="Geometry-1" "RenderPipeline"="UniversalPipeline"}
         Pass
         {
             Blend Zero One

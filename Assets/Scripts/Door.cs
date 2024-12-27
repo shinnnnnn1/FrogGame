@@ -7,11 +7,16 @@ public class Door : MonoBehaviour
 {
     [SerializeField] Transform door;
 
-    Vector3 origin = new Vector3(2.5f, 1.3f, -0.2f);
+    Vector3 origin = new Vector3(2.5f, 1.2f, -0.2f);
     float value = 3.5f;
+
+    [SerializeField] bool multipleTrigger;
+    [SerializeField] TriggerButton[] trigger;
+    [SerializeField] int activatedTrigger;
 
     public void Activate(bool activate)
     {
+
         door.DOPause();
         if (activate)
         {
@@ -22,6 +27,25 @@ public class Door : MonoBehaviour
         {
             float time = Mathf.Abs(door.transform.localPosition.y - origin.y) / 3;
             door.DOLocalMove(origin, time).SetEase(Ease.Linear);
+        }
+    }
+    public void ActivateMultiple(bool activate)
+    {
+        if (activate)
+        {
+            activatedTrigger++;
+        }
+        else
+        {
+            activatedTrigger--;
+        }
+        if(activatedTrigger == trigger.Length)
+        {
+            Activate(true);
+        }
+        else
+        {
+            Activate(false);
         }
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
+using Unity.VisualScripting;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class TriggerButton : MonoBehaviour, IInteractable
 {
-    //[Space(10f)] [SerializeField] bool isFloor = true;
+    AudioSource audios;
 
     [Space(10f)]
     [SerializeField] UnityEvent[] on;
@@ -14,18 +16,49 @@ public class TriggerButton : MonoBehaviour, IInteractable
 
     [SerializeField] Transform button;
 
+    [SerializeField] bool isFloor;
+    [SerializeField] Transform down;
+
     Vector3 origin;
     float value;
 
     bool isActivated;
 
+    ParticleSystem particle;
+
     void Start()
     {
+        audios = GetComponent<AudioSource>();
         origin = button.localPosition;
+        particle = GetComponentInChildren<ParticleSystem>();
     }
+
+    
+    void Update()
+    {
+        if (!isFloor) { return; }
+
+        if (isActivated && !Physics.SphereCast(down.position, 1, Vector3.up, out RaycastHit hit, 2, 1 << 3 | 1 << 8))
+        {
+            Trigger(false);
+
+            float time = Mathf.Abs(button.transform.localPosition.y - origin.y) * 5;
+
+            button.DOPause();
+            button.DOLocalMove(origin, time).SetEase(Ease.Linear);
+
+            isActivated = false;
+        }
+
+    }
+    
+
+
 
     public void Interact(PlayerCtrl player)
     {
+        particle.Play();
+        audios.Play();
         button.DOKill();
         button.DOPunchScale(Vector3.one, 0.3f, 10, 5f);
         Trigger(true);
@@ -41,10 +74,14 @@ public class TriggerButton : MonoBehaviour, IInteractable
 
     void OnTriggerExit(Collider other)
     {
-        isActivated = false;
+        if(Physics.SphereCast(down.position, 1, Vector3.up, out RaycastHit hit, 100, 1 << 3 | 1 << 8))
+        {
+            return;
+        }
         if (isActivated)
         {
             Trigger(false);
+            isActivated = false;
         }
 
         float time = Mathf.Abs(button.transform.localPosition.y - origin.y) * 5;
@@ -57,7 +94,7 @@ public class TriggerButton : MonoBehaviour, IInteractable
     {
         if(button.localPosition.y <= 0.0301f && !isActivated)
         {
-            Debug.Log("Arrrrrrrrrrrr");
+            audios.Play();
             isActivated = true;
             button.DOPause();
             Trigger(true);

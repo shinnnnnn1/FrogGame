@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     bool isPlaying = true;
     PlayerCtrl player;
 
+    public int bonus;
+
     [Header("UI")]
     [SerializeField] Image fadeImage;
     [SerializeField] Image optionUI;
@@ -48,6 +50,21 @@ public class GameManager : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] AudioSource[] sources;
+
+    TriggerEvent currentTrigger;
+    public int triggerIndex;
+
+    [SerializeField] Camera mainCam;
+    bool isSetted;
+
+    private void OnLevelWasLoaded(int level)
+    {
+        if(!isSetted)
+        {
+            Setup();
+            isSetted = true;
+        }
+    }
 
     void Start()
     {
@@ -60,8 +77,9 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = isPlaying ? CursorLockMode.Locked : CursorLockMode.None;
 
         player = FindObjectOfType<PlayerCtrl>();
-        sources = FindObjectsOfType<AudioSource>();
-
+        mainCam = FindObjectOfType<Camera>();
+        //sources = FindObjectsOfType<AudioSource>();
+        sources = mainCam.GetComponentsInChildren<AudioSource>();
 
         PlayerPrefs.SetString("Scene", SceneManager.GetActiveScene().name);
     }
@@ -73,29 +91,33 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            fadeImage.DOFade(1f, 10f).SetEase(Ease.OutCubic).SetDelay(2f);
+            fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).SetDelay(2f);
         }
     }
 
     #region Dialogue and Event
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue(Dialogue dialogue, TriggerEvent trigger)
     {
         dialogueImage.DOFade(0.1f, 0.2f).SetDelay(2.0f);
         StartCoroutine(DialogueEvent(dialogue));
+        currentTrigger = trigger;
+        triggerIndex = trigger.on.Length;
     }
     IEnumerator DialogueEvent(Dialogue dialogue)
     {
         yield return new WaitForSeconds(2.3f);
         for (int i = 0; i < dialogue.dialogue.Length; i++)
         {
-            DialogueEvent(dialogue, i);
+            DialogueEvent(i);
             StartCoroutine(TextAnim(dialogue, i));
             sources[0].PlayOneShot(dialogue.narration[i]);
+
             //yield return new WaitForSeconds(dialogue.narration[i].length + 0.5f);
             yield return new WaitForSeconds(3f);
         }
         dialogueText.text = "";
         dialogueImage.DOFade(0, 0.2f);
+        triggerIndex = 0;
     }
     IEnumerator TextAnim(Dialogue dialogue, int index)
     {
@@ -107,22 +129,9 @@ public class GameManager : MonoBehaviour
         }
         dialogueText.maxVisibleCharacters = dialogue.dialogue[index].Length;
     }
-    void DialogueEvent(Dialogue dialogue, int index)
+    void DialogueEvent(int index)
     {
-        switch (dialogue.name)
-        {
-            case "A1_1":
-
-                break;
-        }
-    }
-    public void CustomEvent(int i)
-    {
-        switch (i)
-        {
-            case 0:
-                break;
-        }
+        currentTrigger.CustomTrigger(index);
     }
     #endregion
 
@@ -172,6 +181,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        fadeImage.DOKill();
+        isSetted = false;
         string nextScene = "Stage" + level + stage;
         SceneManager.LoadScene(nextScene);
 

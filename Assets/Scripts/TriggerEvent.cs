@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.ProBuilder.MeshOperations;
 
 public class TriggerEvent : MonoBehaviour
 {
     [SerializeField] Dialogue dialogue;
-    [SerializeField] UnityEvent[] on;
+    public UnityEvent[] on;
     [SerializeField] UnityEvent[] off;
 
     [SerializeField] bool onStart;
@@ -15,10 +16,10 @@ public class TriggerEvent : MonoBehaviour
     {
         if (!TryGetComponent<Collider>(out Collider collider) && onStart)
         {
-            GameManager.Instance.StartDialogue(dialogue);
+            GameManager.Instance.StartDialogue(dialogue, GetComponent<TriggerEvent>());
         }
     }
-
+    bool a;
     void OnTriggerEnter(Collider other)
     {
         Trigger(true);
@@ -47,4 +48,8 @@ public class TriggerEvent : MonoBehaviour
         }
     }
 
+    public void CustomTrigger(int index)
+    {
+        on[index].Invoke();
+    }
 }

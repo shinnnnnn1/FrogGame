@@ -157,28 +157,32 @@ public class PlayerCtrl : MonoBehaviour
         }
         else
         {
-            anim.SetTrigger("Action1");
-
-            yield return new WaitForSeconds(0.15f);
-            Search();
-            tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
-            tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
-
-            yield return new WaitForSeconds(0.15f);
-            if(isTransforming)
+            if (OnGround())
             {
-                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
-                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
-                yield return new WaitForSeconds(0.3f);
+                anim.SetTrigger("Action1");
+
+                yield return new WaitForSeconds(0.15f);
+                Search();
+                tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
+                tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
+
+                yield return new WaitForSeconds(0.15f);
+                if (isTransforming)
+                {
+                    tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                    tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                    yield return new WaitForSeconds(0.3f);
+                }
+                else
+                {
+
+                    tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                    tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                    yield return new WaitForSeconds(0.05f);
+                }
+                lockOn = false;
             }
-            else
-            {
-                
-                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
-                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
-                yield return new WaitForSeconds(0.05f);
-            }
-            lockOn = false;
+
 
         }
         canMove = true;
@@ -188,13 +192,16 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (Physics.SphereCast(transform.position, radius, transform.forward, out actionHit, distance, actionLayer))
         {
-            lockOn = true;
-            lookObj.LookAt(actionHit.transform.position);
-            rotX = lookObj.localEulerAngles.x;
-            rotY = lookObj.localEulerAngles.y;
-            eatTime = actionHit.distance / distance * 0.14f;
-            Invoke("Interacting", eatTime);
-            actionHit.collider.gameObject.GetComponent<IInteractable>()?.Interact(this);
+            if(actionHit.collider.gameObject.GetComponent<IInteractable>() != null)
+            {
+                lockOn = true;
+                lookObj.LookAt(actionHit.transform.position);
+                rotX = lookObj.localEulerAngles.x;
+                rotY = lookObj.localEulerAngles.y;
+                eatTime = actionHit.distance / distance * 0.14f;
+                Invoke("Interacting", eatTime);
+                actionHit.collider.gameObject.GetComponent<IInteractable>()?.Interact(this);
+            }
         }
         else
         {
