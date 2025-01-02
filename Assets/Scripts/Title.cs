@@ -31,7 +31,7 @@ public class Title : MonoBehaviour
 
     public void GameStart()
     {
-        string start = "StageA1";
+        string start = PlayerPrefs.GetString("Scene", "StageA1");
         fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).OnKill(()=> SceneManager.LoadScene(start));
     }
 

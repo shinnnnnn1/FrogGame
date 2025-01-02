@@ -2,18 +2,21 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.ProBuilder.Shapes;
+using UnityEditor.ShaderGraph.Internal;
 
 public class Platform : MonoBehaviour
 {
-    Vector3 origin;
-    [SerializeField] Vector3 addLocation;
+    [SerializeField] float addValue;
 
-    Vector3 arrivalLocation;
+    float origin;
+    float location;
 
     void Start()
     {
-        origin = transform.position;
-        arrivalLocation = origin + addLocation;
+        origin = transform.position.y;
+        location = origin + addValue;
     }
 
     //need to set time
@@ -22,11 +25,27 @@ public class Platform : MonoBehaviour
         transform.DOPause();
         if (activate)
         {
-            transform.DOLocalMove(arrivalLocation, 2).SetEase(Ease.Linear);
+            float time = Mathf.Abs(transform.position.y - location) / 2;
+            transform.DOLocalMoveY(location, time).SetEase(Ease.Linear);
         }
         else
         {
-            transform.DOLocalMove(origin, 2).SetEase(Ease.Linear);
+            float time = Mathf.Abs(transform.position.y - origin) / 2;
+            transform.DOLocalMoveY(origin, time).SetEase(Ease.Linear);
         }
+    }
+
+    public void ActivateOnce()
+    {
+        transform.DOPause();
+
+        float time = Mathf.Abs(transform.position.y - location) / 2;
+        transform.DOLocalMoveY(location, time).SetEase(Ease.Linear).OnKill(Down);
+    }
+
+    void Down()
+    {
+        float time = Mathf.Abs(transform.position.y - origin) / 2;
+        transform.DOLocalMoveY(origin, time).SetEase(Ease.Linear).SetDelay(1f);
     }
 }

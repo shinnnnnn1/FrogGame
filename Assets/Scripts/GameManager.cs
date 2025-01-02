@@ -7,6 +7,7 @@ using DG.Tweening;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
+using UnityEditor.SearchService;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,8 +49,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text dialogueText;
 
     [Header("Audio")]
-    [SerializeField] AudioMixer audioMixer;
-    [SerializeField] AudioSource[] sources;
+    public AudioMixer audioMixer;
+    public AudioSource[] sources;
 
     TriggerEvent currentTrigger;
     public int triggerIndex;
@@ -59,9 +60,10 @@ public class GameManager : MonoBehaviour
 
     private void OnLevelWasLoaded(int level)
     {
-        if(!isSetted)
+        if (!isSetted)
         {
             Setup();
+            Fade(true);
             isSetted = true;
         }
     }
@@ -151,13 +153,26 @@ public class GameManager : MonoBehaviour
         float value = slider.value * 10 -80;
         audioMixer.SetFloat(slider.name, value);
     }
-    public void ChangeSensitivity()
+    public void ChangeSensitivityHor(Slider slider)
     {
-
+        player.ChangeSensitivity(true, slider.value);
     }
-    public void Title()
+    public void ChangeSensitivityVer(Slider slider)
     {
-
+        player.ChangeSensitivity(false, slider.value);
+    }
+    public void BackToTitle()
+    {
+        Option();
+        string scene = "Title";
+        fadeImage.DOFade(1f, 2f).SetEase(Ease.OutCubic).OnKill(()=> SceneManager.LoadScene(scene));
+        Destroy(this);
+    }
+    public void Restart()
+    {
+        Option();
+        string scene = PlayerPrefs.GetString("Scene");
+        fadeImage.DOFade(1f, 2f).SetEase(Ease.OutCubic).OnKill(() => SceneManager.LoadScene(scene));
     }
     #endregion
 
@@ -183,10 +198,11 @@ public class GameManager : MonoBehaviour
 
         fadeImage.DOKill();
         isSetted = false;
-        string nextScene = "Stage" + level + stage;
-        SceneManager.LoadScene(nextScene);
 
-        //Debug.Log("Next Scene = " + nextScene);
+        string nextScene = "Stage" + level + stage;
+        Debug.Log("Next Scene = " + nextScene);
+
+        SceneManager.LoadScene(nextScene);
     }
 
     public void PlaySE(AudioClip clip)

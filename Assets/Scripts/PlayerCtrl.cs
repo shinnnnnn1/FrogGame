@@ -28,6 +28,9 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float moveSpd = 1f;
     [SerializeField] float jumpPow = 1f;
 
+    [SerializeField] float sensX = 1f;
+    [SerializeField] float sensY = 1f;
+
     public bool canMove = true;
     public bool canLook = true;
 
@@ -108,11 +111,23 @@ public class PlayerCtrl : MonoBehaviour
     void CameraRotation()
     {
         if (!canLook) { return; }
-        xRot -= look.y * sensitivity;
-        yRot += look.x * sensitivity;
+        xRot -= look.y * sensitivity * sensX;
+        yRot += look.x * sensitivity * sensY;
         xRot = Mathf.Clamp(xRot, -10f, 65f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
+    }
+
+    public void ChangeSensitivity(bool hor, float value)
+    {
+        if(hor)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 
     void Jump()
@@ -157,14 +172,15 @@ public class PlayerCtrl : MonoBehaviour
         }
         else
         {
-            if (OnGround())
+            if (true)
             {
                 anim.SetTrigger("Action1");
 
                 yield return new WaitForSeconds(0.15f);
-                Search();
                 tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
                 tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
+
+                Search();
 
                 yield return new WaitForSeconds(0.15f);
                 if (isTransforming)
@@ -201,6 +217,12 @@ public class PlayerCtrl : MonoBehaviour
                 eatTime = actionHit.distance / distance * 0.14f;
                 Invoke("Interacting", eatTime);
                 actionHit.collider.gameObject.GetComponent<IInteractable>()?.Interact(this);
+            }
+            else
+            {
+                Debug.Log("Stop");
+                tongue.DOKill();
+                tongueStart.DOKill();
             }
         }
         else

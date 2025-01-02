@@ -27,16 +27,15 @@ public class Eatable : MonoBehaviour, IInteractable
     IEnumerator EatObject(PlayerCtrl player)
     {
         yield return new WaitForSeconds(0.15f);
-        Vector3 center = Vector3.Lerp(transform.position, player.mouth.position, 0.5f) + Vector3.up * 0.7f;
+        transform.SetParent(player.mouth);
+        
+        Vector3 center = Vector3.Lerp(transform.localPosition, Vector3.zero, 0.5f) + Vector3.up;
         transform.DOLocalPath(new[]
         {
-            center, player.mouth.position
+            center, Vector3.zero
         },
         0.3f, PathType.CatmullRom).SetEase(Ease.OutQuart);
         transform.DOScale(0.6f, 0.3f).SetEase(Ease.OutQuart);
-
-        yield return new WaitForSeconds(0.31f);
-        transform.SetParent(player.mouth);
     }
 
     public void Fire(PlayerCtrl player)

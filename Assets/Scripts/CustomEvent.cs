@@ -27,6 +27,10 @@ public class CustomEvent : MonoBehaviour
             case 1:
                 Event1();
                 break;
+            case 2:
+                Destroy(Instant);
+                Invoke("Event2", 2f);
+                break;
         }
     }
     void Event0()
@@ -43,5 +47,11 @@ public class CustomEvent : MonoBehaviour
         {
             GameManager.Instance.StartDialogue(dialogue, trigger);
         }
+    }
+    void Event2()
+    {
+        Instant = Instantiate(instantiateObj, instantiatePos.position, Quaternion.identity);
+        Rigidbody rigid = Instant.gameObject.GetComponent<Rigidbody>();
+        rigid.AddForce(Vector3.up * 1300);
     }
 }
