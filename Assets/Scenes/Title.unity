@@ -5014,6 +5014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1085a02d59a67e444828413de999d462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 0}
   fadeImage: {fileID: 894317987}
   mainImage: {fileID: 698300847}
   optionImage: {fileID: 67898461}
@@ -5992,6 +5993,8 @@ MonoBehaviour:
   sensitivity: 0.08
   moveSpd: 5
   jumpPow: 500
+  sensX: 1
+  sensY: 1
   canMove: 0
   canLook: 0
   tongue: {fileID: 255451523}

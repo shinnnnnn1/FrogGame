@@ -58,10 +58,15 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float gDistance = 1f;
     RaycastHit groundHit;
 
+    [Space(10f)][Header("Audio")]
+    AudioSource audios;
+    [SerializeField] AudioClip[] clips;
+
     void Awake()
     {
         anim = gameObject.transform.GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
+        audios = GetComponent<AudioSource>();
         if (virtualCam != null)
         {
             componentBase = virtualCam.GetCinemachineComponent(CinemachineCore.Stage.Body);
@@ -134,6 +139,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(OnGround())
         {
+            audios.PlayOneShot(clips[2]);
             float jump = isTransforming ? jumpPow * 0.7f : jumpPow;
             rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
             rigid.AddForce(Vector3.up * jump);
@@ -162,6 +168,7 @@ public class PlayerCtrl : MonoBehaviour
         anim.SetFloat("Move", 0);
         if (isTransforming)
         {
+            audios.PlayOneShot(clips[0]);
             isTransforming = false;
             anim.SetBool("Action", false);
             anim.SetTrigger("Action2");
@@ -172,32 +179,32 @@ public class PlayerCtrl : MonoBehaviour
         }
         else
         {
-            if (true)
+            audios.PlayOneShot(clips[3]);
+            anim.SetTrigger("Action1");
+
+            yield return new WaitForSeconds(0.15f);
+            tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
+            tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
+
+            Search();
+
+            yield return new WaitForSeconds(0.15f);
+            if (isTransforming)
             {
-                anim.SetTrigger("Action1");
-
-                yield return new WaitForSeconds(0.15f);
-                tongue.DOLocalMove(new Vector3(0, 0.05f, -0.043f), 0.1f);
-                tongueStart.DOLocalMove(new Vector3(0, 0.008f, 0), 0.1f);
-
-                Search();
-
-                yield return new WaitForSeconds(0.15f);
-                if (isTransforming)
-                {
-                    tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
-                    tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
-                    yield return new WaitForSeconds(0.3f);
-                }
-                else
-                {
-
-                    tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
-                    tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
-                    yield return new WaitForSeconds(0.05f);
-                }
-                lockOn = false;
+                audios.PlayOneShot(clips[1]);
+                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                yield return new WaitForSeconds(0.3f);
             }
+            else
+            {
+
+                tongue.DOLocalMove(new Vector3(-3.308722e-25f, 0.004158414f, 2.980232e-10f), 0.02f).SetEase(Ease.OutQuart);
+                tongueStart.DOLocalMove(new Vector3(-8.349354e-26f, 0.004507747f, 6.519258e-10f), 0.1f);
+                yield return new WaitForSeconds(0.05f);
+            }
+            lockOn = false;
+
 
 
         }

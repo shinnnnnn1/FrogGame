@@ -10,12 +10,14 @@ public class CustomEvent : MonoBehaviour
 
     [SerializeField] Transform instantiatePos;
     [SerializeField] GameObject instantiateObj;
+    [SerializeField] AudioClip clip;
 
     [SerializeField] int intager;
     [SerializeField] bool boolean;
 
     GameObject Instant;
 
+    AudioSource audios;
     
     public void StartEvent(int index)
     {
@@ -53,5 +55,8 @@ public class CustomEvent : MonoBehaviour
         Instant = Instantiate(instantiateObj, instantiatePos.position, Quaternion.identity);
         Rigidbody rigid = Instant.gameObject.GetComponent<Rigidbody>();
         rigid.AddForce(Vector3.up * 1300);
+
+        audios = GetComponent<AudioSource>();
+        audios.PlayOneShot(clip);
     }
 }
