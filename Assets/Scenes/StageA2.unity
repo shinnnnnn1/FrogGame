@@ -890,6 +890,7 @@ MonoBehaviour:
   instantiatePos: {fileID: 915394473}
   instantiateObj: {fileID: 6768540603053436828, guid: 43b65772698279c4186292f26a15efa2,
     type: 3}
+  clip: {fileID: 0}
   intager: 0
   boolean: 0
 --- !u!114 &116689819 stripped
@@ -1438,7 +1439,7 @@ Transform:
   m_GameObject: {fileID: 179873526}
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000007441332, y: -0.04981371, z: 3.7114112e-10, w: 0.99875855}
-  m_LocalPosition: {x: 24.68, y: 4.36, z: 52.83}
+  m_LocalPosition: {x: 3.71, y: 4.36, z: 52.83}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11436,7 +11437,7 @@ PrefabInstance:
     - target: {fileID: 8514164777871987221, guid: 9ae65f18f9e85fb4eba79b783f50b525,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 24.18
+      value: 3.21
       objectReference: {fileID: 0}
     - target: {fileID: 8514164777871987221, guid: 9ae65f18f9e85fb4eba79b783f50b525,
         type: 3}
