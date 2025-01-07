@@ -227,7 +227,6 @@ public class PlayerCtrl : MonoBehaviour
             }
             else
             {
-                Debug.Log("Stop");
                 tongue.DOKill();
                 tongueStart.DOKill();
             }

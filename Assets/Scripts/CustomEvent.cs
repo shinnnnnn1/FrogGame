@@ -33,6 +33,9 @@ public class CustomEvent : MonoBehaviour
                 Destroy(Instant);
                 Invoke("Event2", 2f);
                 break;
+            case 3:
+                Event3();
+                break;
         }
     }
     void Event0()
@@ -58,5 +61,9 @@ public class CustomEvent : MonoBehaviour
 
         audios = GetComponent<AudioSource>();
         audios.PlayOneShot(clip);
+    }
+    void Event3()
+    {
+        Instant = Instantiate(instantiateObj, instantiatePos.position, Quaternion.identity);
     }
 }
