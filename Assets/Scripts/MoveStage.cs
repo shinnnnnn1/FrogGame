@@ -26,8 +26,11 @@ public class MoveStage : MonoBehaviour
         if (isActivated) { return; }
         isActivated = true;
 
-        doors[0].DOMoveX(-3.5f, 0.5f).SetRelative(true).SetEase(Ease.OutQuart);
-        doors[1].DOMoveX(3.5f, 0.5f).SetRelative(true).SetEase(Ease.OutQuart);
+        Vector3 pos1 = doors[0].position + doors[0].right * -3.5f;
+        Vector3 pos2 = doors[1].position + doors[1].right * 3.5f;
+
+        doors[0].DOMove(pos1, 0.5f).SetEase(Ease.OutQuart);
+        doors[1].DOMove(pos2, 0.5f).SetEase(Ease.OutQuart);
 
         transform.DOMoveY(-20, 20).SetRelative(true).SetEase(Ease.Linear).SetDelay(2f);
         GameManager.Instance.Fade(false);
