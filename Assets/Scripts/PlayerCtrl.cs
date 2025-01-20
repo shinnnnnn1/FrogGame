@@ -118,7 +118,7 @@ public class PlayerCtrl : MonoBehaviour
         if (!canLook) { return; }
         xRot -= look.y * sensitivity * sensX;
         yRot += look.x * sensitivity * sensY;
-        xRot = Mathf.Clamp(xRot, -10f, 65f);
+        xRot = Mathf.Clamp(xRot, -30f, 65f);
         Quaternion rot = Quaternion.Euler(xRot, yRot, 0);
         camFollow.rotation = rot;
     }

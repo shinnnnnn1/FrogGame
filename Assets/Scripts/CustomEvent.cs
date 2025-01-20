@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CustomEvent : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class CustomEvent : MonoBehaviour
     [SerializeField] bool boolean;
 
     GameObject Instant;
+    GameObject Instant2;
 
     AudioSource audios;
     
@@ -35,6 +37,18 @@ public class CustomEvent : MonoBehaviour
                 break;
             case 3:
                 Event3();
+                break;
+            case 4:
+                Event4();
+                break;
+            case 6:
+                Event6();
+                break;
+            case 7:
+                Event7();
+                break;
+            case 8:
+                Event8();
                 break;
         }
     }
@@ -65,5 +79,34 @@ public class CustomEvent : MonoBehaviour
     void Event3()
     {
         Instant = Instantiate(instantiateObj, instantiatePos.position, Quaternion.identity);
+    }
+
+    void Event4()
+    {
+        Destroy(Instant2);
+        Instant2 = Instantiate(instantiateObj, instantiatePos.position, Quaternion.identity);
+        Event5();
+    }
+
+    void Event5()
+    {
+        audios = GetComponent<AudioSource>();
+        audios.PlayOneShot(clip);
+    }
+    void Event6()
+    {
+
+        instantiatePos.DOMove(instantiatePos.position - instantiatePos.up, 1);
+
+    }
+    void Event7()
+    {
+
+         instantiatePos.DOMove(instantiatePos.position + instantiatePos.up, 1);
+
+    }
+    void Event8()
+    {
+        Destroy(Instant2);
     }
 }

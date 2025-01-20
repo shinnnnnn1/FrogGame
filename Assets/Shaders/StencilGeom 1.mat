@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: StencilGeom
+  m_Name: StencilGeom 1
   m_Shader: {fileID: 4800000, guid: 767490326d569464c9a26e0a7f716947, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -25,6 +25,6 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _StencilID: 1
+    - _StencilID: 2
     m_Colors: []
   m_BuildTextureStacks: []
