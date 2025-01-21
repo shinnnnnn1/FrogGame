@@ -101,9 +101,19 @@ public class GameManager : MonoBehaviour
     public void StartDialogue(Dialogue dialogue, TriggerEvent trigger)
     {
         dialogueImage.DOFade(0.1f, 0.2f).SetDelay(2.0f);
+        
+        if(trigger != null)
+        {
+            currentTrigger = trigger;
+            triggerIndex = trigger.on.Length;
+        }
+        else
+        {
+            currentTrigger = null;
+            triggerIndex = 0;
+        }
+
         StartCoroutine(DialogueEvent(dialogue));
-        currentTrigger = trigger;
-        triggerIndex = trigger.on.Length;
     }
     IEnumerator DialogueEvent(Dialogue dialogue)
     {
@@ -112,7 +122,7 @@ public class GameManager : MonoBehaviour
         {
             DialogueEvent(i);
             StartCoroutine(TextAnim(dialogue, i));
-            sources[0].PlayOneShot(dialogue.narration[i]);
+            sources[2].PlayOneShot(dialogue.narration[i]);
 
             //yield return new WaitForSeconds(dialogue.narration[i].length + 0.5f);
             yield return new WaitForSeconds(3f);
@@ -133,7 +143,7 @@ public class GameManager : MonoBehaviour
     }
     void DialogueEvent(int index)
     {
-        currentTrigger.CustomTrigger(index);
+        currentTrigger?.CustomTrigger(index);
     }
     #endregion
 
@@ -207,6 +217,6 @@ public class GameManager : MonoBehaviour
 
     public void PlaySE(AudioClip clip)
     {
-
+        sources[1].PlayOneShot(clip);
     }
 }
