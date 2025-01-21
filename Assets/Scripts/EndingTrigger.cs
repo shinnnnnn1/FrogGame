@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class EndingTrigger : MonoBehaviour
 {
     [SerializeField] Dialogue dial;
     [SerializeField] bool[] trigger = new bool[3];
     bool isActivated;
+
+    [SerializeField] Transform door;
 
     public void _Activate(int index)
     {
@@ -56,6 +59,9 @@ public class EndingTrigger : MonoBehaviour
     void Trigger()
     {
         if(isActivated) {return;}
-        Debug.Log("Event");
+        GameManager.Instance.StartDialogue(dial, null);
+
     }
+
+
 }
