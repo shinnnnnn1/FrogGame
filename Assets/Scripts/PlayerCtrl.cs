@@ -127,11 +127,11 @@ public class PlayerCtrl : MonoBehaviour
     {
         if(hor)
         {
-
+            sensX = value * 0.1f;
         }
         else
         {
-
+            sensY = value * 0.1f;
         }
     }
 

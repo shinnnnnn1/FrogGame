@@ -8,10 +8,14 @@ public class Mushroom : MonoBehaviour
     [SerializeField] float pow = 100f;
     [SerializeField] AudioClip clip;
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         rigid = collision.gameObject.GetComponent<Rigidbody>();
-        rigid.AddForce(this.transform.up * pow, ForceMode.Impulse);
-        GameManager.Instance.PlaySE(clip);
+        if(rigid.position.y > transform.position.y)
+        {
+            rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+            rigid.AddForce(this.transform.up * pow, ForceMode.Impulse);
+            GameManager.Instance.PlaySE(clip);
+        }
     }
 }

@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
     public bool isPlaying = true;
     public PlayerCtrl player;
 
-    public int bonus;
+    public float senX = 1f;
+    public float senY = 1f;
 
     public bool[] acquiredBonus = new bool[10];
 

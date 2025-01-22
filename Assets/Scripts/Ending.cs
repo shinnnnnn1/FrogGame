@@ -11,6 +11,7 @@ public class Ending : MonoBehaviour
     [SerializeField] bool isTrigger;
     [SerializeField] Image[] fadeImage;
     [SerializeField] TMP_Text bonusText;
+    [SerializeField] Image creditImage;
     AudioSource source;
     
     void OnTriggerEnter(Collider other)
@@ -38,6 +39,8 @@ public class Ending : MonoBehaviour
         fadeImage[0].DOFade(0, 3f).SetDelay(2f);
         fadeImage[1].DOFade(0, 3f).SetDelay(6f);
         StartCoroutine(Music());
+        creditImage.transform.DOMoveY(1000, 5).SetEase(Ease.Linear).SetDelay(15).SetRelative();
+        Invoke("Title", 22);
 
         int bonus = 0;
         for (int i = 0; i < GameManager.Instance.acquiredBonus.Length; i++)
@@ -57,5 +60,10 @@ public class Ending : MonoBehaviour
             source.volume += Time.deltaTime / 5;
             yield return null;
         }
+    }
+
+    void Title()
+    {
+        SceneManager.LoadScene("Title");
     }
 }

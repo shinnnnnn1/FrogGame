@@ -332,7 +332,19 @@ MonoBehaviour:
   m_Value: 5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4103084337438653204}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ChangeSensitivityHor
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2567511292084327945}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &845544214720069829
 GameObject:
   m_ObjectHideFlags: 0
@@ -2327,7 +2339,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPlaying: 1
   player: {fileID: 0}
-  bonus: 0
   acquiredBonus: 00000000000000000000
   fadeImage: {fileID: 7196214631654414950}
   optionUI: {fileID: 3015064359816327825}
@@ -3234,7 +3245,19 @@ MonoBehaviour:
   m_Value: 5
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4103084337438653204}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ChangeSensitivityVer
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1773055158733823526}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6942879616878732084
 GameObject:
   m_ObjectHideFlags: 0
@@ -4125,8 +4148,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Title, Assembly-CSharp
+      - m_Target: {fileID: 4103084337438653204}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: Option
         m_Mode: 1
         m_Arguments:
