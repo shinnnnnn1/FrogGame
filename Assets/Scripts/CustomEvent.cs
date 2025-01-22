@@ -109,4 +109,9 @@ public class CustomEvent : MonoBehaviour
     {
         Destroy(Instant2);
     }
+
+    public void Event9(Dialogue dialogue)
+    {
+        GameManager.Instance.StartDialogue(dialogue, null);
+    }
 }

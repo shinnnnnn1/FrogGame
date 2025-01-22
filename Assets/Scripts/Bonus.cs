@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Bonus : MonoBehaviour
 {
+    [SerializeField] int index;
+    bool isActivated;
+
+    [Space(20f)]
     [SerializeField] GameObject penguin;
     [SerializeField] ParticleSystem particle;
     AudioSource source;
-
-    bool isActivated;
 
     private void Start()
     {
@@ -21,7 +23,7 @@ public class Bonus : MonoBehaviour
             penguin.SetActive(false);
             particle.Play();
             source.Play();
-            GameManager.Instance.bonus++;
+            GameManager.Instance.Bonus(index);
             isActivated = true;
         }
     }

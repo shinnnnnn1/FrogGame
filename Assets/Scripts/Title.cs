@@ -54,6 +54,11 @@ public class Title : MonoBehaviour
         Application.Quit();
     }
 
+    public void DataReset()
+    {
+        PlayerPrefs.SetString("Scene", "StageA1");
+    }
+
     IEnumerator MovingFrog()
     {
         yield return new WaitForSeconds(1f);
@@ -106,7 +111,7 @@ public class Title : MonoBehaviour
         objInstance = false;
     }
 
-    void ChangeAudioValue(Slider slider)
+    public void ChangeAudioValue(Slider slider)
     {
         float value = slider.value * 10 - 80;
         audioMixer.SetFloat(slider.name, value);

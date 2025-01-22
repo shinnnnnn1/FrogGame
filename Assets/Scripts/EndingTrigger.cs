@@ -11,6 +11,10 @@ public class EndingTrigger : MonoBehaviour
     bool isActivated;
 
     [SerializeField] Transform door;
+    [SerializeField] AudioClip clip;
+    [SerializeField] ParticleSystem particle;
+
+    [SerializeField] Transform newDoor;
 
     public void _Activate(int index)
     {
@@ -60,8 +64,18 @@ public class EndingTrigger : MonoBehaviour
     {
         if(isActivated) {return;}
         GameManager.Instance.StartDialogue(dial, null);
-
+        StartCoroutine(EndingDialouge());
     }
-
+    IEnumerator EndingDialouge()
+    {
+        door.DOMoveY(10, 5f).SetEase(Ease.Linear);
+        yield return new WaitForSeconds(1f);
+        door.DOPause(); 
+        door.DOMoveY(1, 0.3f).SetEase(Ease.Linear);
+        particle.Play();
+        GameManager.Instance.PlaySE(clip);
+        yield return new WaitForSeconds(3f);
+        newDoor.DORotate(new Vector3(0, 0, 300), 60).SetEase(Ease.Linear);
+    }
 
 }

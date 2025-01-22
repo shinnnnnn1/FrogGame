@@ -36,10 +36,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    bool isPlaying = true;
-    PlayerCtrl player;
+    public bool isPlaying = true;
+    public PlayerCtrl player;
 
     public int bonus;
+
+    public bool[] acquiredBonus = new bool[10];
 
     [Header("UI")]
     [SerializeField] Image fadeImage;
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Slider[] options;
     [SerializeField] Image dialogueImage;
     [SerializeField] TMP_Text dialogueText;
+    
 
     [Header("Audio")]
     public AudioMixer audioMixer;
@@ -57,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Camera mainCam;
     bool isSetted;
+
+    public bool endingbool;
 
     private void OnLevelWasLoaded(int level)
     {
@@ -96,11 +101,17 @@ public class GameManager : MonoBehaviour
             fadeImage.DOFade(1f, 5f).SetEase(Ease.OutCubic).SetDelay(2f);
         }
     }
+    public void EndingFade()
+    {
+        fadeImage.color = new Color(1, 1, 1, 0);
+        fadeImage.DOPause();
+        fadeImage.DOFade(1f, 5f);
+    }
 
     #region Dialogue and Event
     public void StartDialogue(Dialogue dialogue, TriggerEvent trigger)
     {
-        dialogueImage.DOFade(0.1f, 0.2f).SetDelay(2.0f);
+        dialogueImage.DOFade(0.5f, 0.2f).SetDelay(2.0f);
         
         if(trigger != null)
         {
@@ -122,10 +133,9 @@ public class GameManager : MonoBehaviour
         {
             DialogueEvent(i);
             StartCoroutine(TextAnim(dialogue, i));
-            sources[2].PlayOneShot(dialogue.narration[i]);
 
-            //yield return new WaitForSeconds(dialogue.narration[i].length + 0.5f);
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(dialogue.delay[i]);
+            //yield return new WaitForSeconds(3f);
         }
         dialogueText.text = "";
         dialogueImage.DOFade(0, 0.2f);
@@ -150,6 +160,7 @@ public class GameManager : MonoBehaviour
     #region Options
     public void Option()
     {
+        if(endingbool) { return;}
         isPlaying = !isPlaying;
         optionUI.gameObject.SetActive(!optionUI.gameObject.activeSelf);
         player.canMove = isPlaying;
@@ -218,5 +229,10 @@ public class GameManager : MonoBehaviour
     public void PlaySE(AudioClip clip)
     {
         sources[1].PlayOneShot(clip);
+    }
+
+    public void Bonus(int index)
+    {
+        acquiredBonus[index] = true;
     }
 }
