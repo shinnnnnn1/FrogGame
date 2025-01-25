@@ -1,10 +1,6 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
-using UnityEngine.ProBuilder.Shapes;
-using UnityEditor.ShaderGraph.Internal;
+
 
 public class Platform : MonoBehaviour
 {

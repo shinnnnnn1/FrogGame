@@ -7,7 +7,6 @@ using DG.Tweening;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
-using UnityEditor.SearchService;
 
 public class GameManager : MonoBehaviour
 {

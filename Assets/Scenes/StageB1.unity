@@ -3750,7 +3750,7 @@ PrefabInstance:
     - target: {fileID: 1025681519537473006, guid: aa99a810914c5b84b9bc5d51f95dd05c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.05
+      value: 49.8315
       objectReference: {fileID: 0}
     - target: {fileID: 1025681519537473006, guid: aa99a810914c5b84b9bc5d51f95dd05c,
         type: 3}
@@ -21084,22 +21084,22 @@ PrefabInstance:
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 60.12
+      value: 58.27
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10.31
+      value: -12.975
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 65.38
+      value: 63.21
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.72416645
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
@@ -21109,7 +21109,7 @@ PrefabInstance:
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.68962526
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
@@ -21124,7 +21124,7 @@ PrefabInstance:
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 87.201
       objectReference: {fileID: 0}
     - target: {fileID: 4504304736708400057, guid: 6df958b7c26ee37489903c60d0d3b63e,
         type: 3}
@@ -42008,7 +42008,7 @@ PrefabInstance:
     - target: {fileID: 8995495603549951137, guid: caf069bdf07b6f1458b9ac51cdf01e9a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 47.35
+      value: 49.1315
       objectReference: {fileID: 0}
     - target: {fileID: 8995495603549951137, guid: caf069bdf07b6f1458b9ac51cdf01e9a,
         type: 3}
@@ -88164,7 +88164,7 @@ PrefabInstance:
     - target: {fileID: 7131025140048068101, guid: 39559fa1e8091354cb14e24090c15655,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 46.394997
+      value: 48.1765
       objectReference: {fileID: 0}
     - target: {fileID: 7131025140048068101, guid: 39559fa1e8091354cb14e24090c15655,
         type: 3}
@@ -89918,7 +89918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202655646031778, guid: 144403e0e442d2a448335e0c845d665b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.358498
+      value: 50.14
       objectReference: {fileID: 0}
     - target: {fileID: 4202655646031778, guid: 144403e0e442d2a448335e0c845d665b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -98101,7 +98101,7 @@ PrefabInstance:
     - target: {fileID: 1025681519537473006, guid: aa99a810914c5b84b9bc5d51f95dd05c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 46.289997
+      value: 48.0715
       objectReference: {fileID: 0}
     - target: {fileID: 1025681519537473006, guid: aa99a810914c5b84b9bc5d51f95dd05c,
         type: 3}
@@ -99033,7 +99033,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4202655646031778, guid: 144403e0e442d2a448335e0c845d665b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.4301
+      value: -15.4301
       objectReference: {fileID: 0}
     - target: {fileID: 4202655646031778, guid: 144403e0e442d2a448335e0c845d665b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -128157,6 +128157,7 @@ MonoBehaviour:
   isTrigger: 1
   fadeImage: []
   bonusText: {fileID: 0}
+  creditImage: {fileID: 0}
 --- !u!64 &9060995010848137486
 MeshCollider:
   m_ObjectHideFlags: 0
